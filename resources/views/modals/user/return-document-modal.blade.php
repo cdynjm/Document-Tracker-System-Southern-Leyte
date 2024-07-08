@@ -1,0 +1,28 @@
+<!-- The Modal -->
+<div class="modal fade" id="returnDocumentModal" aria-hidden="true" style="display: none;" >
+    <div class="modal-dialog" data-backdrop="static" data-keyboard="false">
+        <div class="modal-content border-radius-md">
+            <div class="modal-header">
+                <h5 class="modal-title">Return Document</h5>
+                <button type="button" class="btn-close bg-dark" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+                <div class="modal-body">  
+                    <form action="" id="return-document" enctype="multipart/form-data">
+                        <input type="hidden" id="id" name="documentID" class="form-control" readonly>
+                        <input type="hidden" id="data-id" name="dataID" class="form-control" readonly>
+                        <input type="hidden" id="office-id" name="id" class="form-control" readonly>
+                        
+                        <label for="">Reason</label>
+                        <select name="reason" id="" class="form-select">
+                            <option value="">Select...</option>
+                            <option value="Lack of Document">Lack of Document</option>
+                        </select>
+                        <div class="d-flex justify-content-center mt-4">
+                            <button type="submit" class="btn btn-sm bg-dark text-white">Return</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 
