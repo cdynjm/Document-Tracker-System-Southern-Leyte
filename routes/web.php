@@ -51,5 +51,5 @@ Route::group(['middleware' => 'auth'], function () {
 		Route::get('/user-profile', [UserController::class, 'profile'])->name('user-profile');
 	});
 	
-	Route::post('logout', [LoginController::class, 'logout'])->name('logout');
+	Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 });

@@ -48,6 +48,9 @@
         @if(Auth::user()->role == 3)
             <script src="{{asset('storage/js/user.js')}}" data-navigate-once></script>
         @endif
+        <script src="{{asset('storage/js/signout.js')}}" data-navigate-once></script>
+    @else
+        <script src="{{asset('storage/js/signin.js')}}" data-navigate-once></script>
     @endif
 
     <link href="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.css" rel="stylesheet">

@@ -61,13 +61,11 @@
                         </li>
                         <hr>
                         <li class="list-group-item p-0" style="border: none !important;">
-                            <form role="form" method="post" action="{{ route('logout') }}" id="logout-form">
+                            <form id="sign-out">
                                 @csrf
-                                <a href="{{ route('logout') }}"
-                                    onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                                    class="ms-2 nav-link text-dark font-weight-bold p-0">
+                                <button class="ms-2 nav-link text-dark font-weight-bold p-0 border-0 bg-white">
                                     <i class="fas fa-sign-out-alt me-2"></i> Log Out
-                                </a>
+                                </button>
                             </form>
                         </li>
                     </ul>

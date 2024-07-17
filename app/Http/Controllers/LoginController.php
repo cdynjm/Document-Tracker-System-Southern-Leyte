@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Password;
 use App\Models\User;
+use Illuminate\Http\Response;
+use App\Http\Requests\Auth\LoginRequest;
 
 //CIPHER:
 use App\Http\Controllers\AESCipher;
@@ -23,15 +25,12 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
-        ]);
 
-        if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            
+        try {
+            $request->authenticate();
+           
             $aes = new AESCipher;
             $request->session()->regenerate();
 
@@ -39,12 +38,13 @@ class LoginController extends Controller
             $authToken = $user->createToken(\Str::random(50))->plainTextToken;
             $request->session()->put('token', $authToken);
 
-            return redirect()->intended('admin-dashboard');
-        }
+            return response()->json([], Response::HTTP_OK);
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'Message' => $e->getMessage(),
+            ],  Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function logout(Request $request)
@@ -54,6 +54,6 @@ class LoginController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return response()->json([], Response::HTTP_OK);
     }
 }

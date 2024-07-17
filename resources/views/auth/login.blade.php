@@ -30,17 +30,17 @@
                         </div>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2 m-4 mt-0">
-                        <form role="form" method="POST" action="{{ route('login.perform') }}">
+                        <form role="form" id="sign-in">
                             @csrf
                             @method('post')
                             <div class="flex flex-col mb-3">
                                 <label for="">Email</label>
-                                <input type="email" name="email" class="form-control" value="{{ old('email')}}" placeholder="example@gmail.com" aria-label="Email">
+                                <input type="email" name="email" class="form-control" value="{{ old('email')}}" placeholder="example@gmail.com" aria-label="Email" required>
                                 @error('email') <p class="text-danger text-xs pt-1"> {{$message}} </p>@enderror
                             </div>
                             <div class="flex flex-col mb-3">
                                 <label for="">Password</label>
-                                <input type="password" name="password" class="form-control" aria-label="Password" id="password" placeholder="Password" >
+                                <input type="password" name="password" class="form-control" aria-label="Password" id="password" placeholder="Password" required>
                                 @error('password') <p class="text-danger text-xs pt-1"> {{$message}} </p>@enderror
                             </div>
                             <div class="form-check form-switch">
