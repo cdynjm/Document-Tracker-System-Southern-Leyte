@@ -13,10 +13,7 @@
                         <input type="hidden" id="office-id" name="id" class="form-control" readonly>
                         
                         <label for="">Reason</label>
-                        <select name="reason" id="" class="form-select">
-                            <option value="">Select...</option>
-                            <option value="Lack of Document">Lack of Document</option>
-                        </select>
+                        <textarea name="reason" id="" class="form-control" cols="30" rows="10"></textarea>
                         <div class="d-flex justify-content-center mt-4">
                             <button type="submit" class="btn btn-sm bg-dark text-white">Return</button>
                         </div>

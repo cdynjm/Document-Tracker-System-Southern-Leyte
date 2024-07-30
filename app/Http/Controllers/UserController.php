@@ -31,7 +31,8 @@ class UserController extends Controller
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function dashboard() {
-        return view('pages.user.user-dashboard');
+        $receivedLogs = $this->UserInterface->getReceivedLogs();
+        return view('pages.user.user-dashboard', compact('receivedLogs'));
     }
     /**
      * Handle an incoming request.

@@ -16,6 +16,7 @@ use App\Models\Tracker;
 use App\Models\Documents;
 use App\Models\Sections;
 use App\Models\Logs;
+use App\Models\ReturnedLogs;
 
 class DocumentTracker extends Component
 {
@@ -25,6 +26,7 @@ class DocumentTracker extends Component
     public $offices;
     public $sections;
     public $documents;
+    public $returnedlogs;
     /**
      * Handle an incoming real time updates.
      *
@@ -47,6 +49,7 @@ class DocumentTracker extends Component
         $this->offices = Offices::get();
         $this->sections = Sections::get();
         $this->logs = Logs::where(['userID' => Auth::user()->id])->get();
+        $this->returnedlogs = ReturnedLogs::where(['userID' => Auth::user()->id])->get();
     }
     /**
      * Handle an incoming real time updates.
@@ -59,7 +62,8 @@ class DocumentTracker extends Component
         $offices = $this->offices;
         $sections = $this->sections;
         $documents = $this->documents;
+        $returnedlogs = $this->returnedlogs;
 
-        return view('livewire.document-tracker', compact('logs','tracker','offices', 'sections', 'documents'));
+        return view('livewire.document-tracker', compact('logs','tracker','offices', 'sections', 'documents', 'returnedlogs'));
     }
 }

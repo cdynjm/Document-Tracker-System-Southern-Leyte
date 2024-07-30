@@ -12,6 +12,7 @@ interface UserInterface
     public function getSections();
     public function getTracker($request);
     public function getDocuments($request);
+    public function getReceivedLogs();
     
     public function forwardDocument($request);
     public function forwardSelectedDocument($request);

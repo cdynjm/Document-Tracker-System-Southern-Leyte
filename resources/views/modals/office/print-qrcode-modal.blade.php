@@ -8,7 +8,8 @@
             </div>
                 <div class="modal-body text-center">  
                     <div id="qrCodeContainer">
-                        {!! QrCode::size(110)->generate($doc->qrcode) !!}
+                        {!! QrCode::size(150)->generate($doc->qrcode) !!}
+                        <p style="margin: 20px;">{{ $doc->qrcode }}</p>
                     </div>
                     <div class="d-flex justify-content-center mt-4">
                         <button id="printQRCodeButton" class="btn btn-sm bg-dark text-white">Print</button>

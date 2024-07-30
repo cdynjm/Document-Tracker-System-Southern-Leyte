@@ -26,7 +26,7 @@
                     <div class="card-header pb-0">
                         <div class="align-items-center">
                             <h5 class="fw-bolder"><i class="fa-solid fa-user-secret me-1"></i> Log In</h5> 
-                            <p class="text-sm">Sign In with your account credetials to proceed</p>
+                            <p class="text-sm">Sign In with your account credentials to proceed</p>
                         </div>
                     </div>
                     <div class="card-body px-0 pt-0 pb-2 m-4 mt-0">
@@ -38,18 +38,20 @@
                                 <input type="email" name="email" class="form-control" value="{{ old('email')}}" placeholder="example@gmail.com" aria-label="Email" required>
                                 @error('email') <p class="text-danger text-xs pt-1"> {{$message}} </p>@enderror
                             </div>
-                            <div class="flex flex-col mb-3">
+                            <div class="flex flex-col mb-2">
                                 <label for="">Password</label>
-                                <input type="password" name="password" class="form-control" aria-label="Password" id="password" placeholder="Password" required>
+                                    
+                                    <input type="password" name="password" class="form-control d-inline" aria-label="Password" id="password" placeholder="Password" required>
+
+                                    <div id="toggle-password" class="mt-2 bg-transparent ms-1 cursor-pointer text-sm mb-4">
+                                        <i class="fa fa-eye" id="eye-icon"></i> <small><span id="text">Show</span> Password</small>
+                                    </div>  
+                              
                                 @error('password') <p class="text-danger text-xs pt-1"> {{$message}} </p>@enderror
                             </div>
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" name="remember" type="checkbox" id="show-password">
-                                <label class="form-check-label" for="">Show Password</label>
-                            </div>
-                            
+
                             <div class="text-center">
-                                <button type="submit" class="btn btn-lg bg-dark text-white btn-lg w-100 mt-4 mb-0">Log in</button>
+                                <button type="submit" class="btn btn-lg bg-dark text-white btn-lg w-100 mt-0 mb-0">Log in</button>
                             </div>
                         </form>
                     </div>
@@ -57,6 +59,6 @@
             </div>
             <div class="col-md-4"></div>
         </div>
-        @include('layouts.footers.auth.footer')
+        @include('layouts.footers.guest.footer')
     </div>
 @endsection

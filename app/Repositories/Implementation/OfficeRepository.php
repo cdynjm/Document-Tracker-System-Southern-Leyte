@@ -27,6 +27,8 @@ use App\Models\Tracker;
 use App\Models\Documents;
 use App\Models\Sections;
 use App\Models\Logs;
+use App\Models\ReturnedLogs;
+use App\Models\ReceivedLogs;
 
 class OfficeRepository implements OfficeInterface { 
     protected $aes;
@@ -69,6 +71,14 @@ class OfficeRepository implements OfficeInterface {
      */
     public function getLogs() {
         return Logs::where(['userID' => Auth::user()->id])->get();
+    }
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function getReturnedLogs() {
+        return ReturnedLogs::where(['userID' => Auth::user()->id])->get();
      }
      /**
      * Handle an incoming request.
@@ -108,7 +118,7 @@ class OfficeRepository implements OfficeInterface {
 
         for($count = 0; $count < $request->quantity; $count++) {
             $document = Documents::create([
-                'qrcode' => \Str::slug(Carbon::now()->addSeconds($count)."-".\Str::random(6)),
+                'qrcode' => \Str::slug(Carbon::now()->addSeconds($count)."-".$request->extension),
                 'trackerID' => 0,
                 'officeID' => Auth::user()->officeID,
                 'userID' => Auth::user()->id,
@@ -156,6 +166,17 @@ class OfficeRepository implements OfficeInterface {
                 'userID' => Auth::user()->id
             ]);
         }
+
+        $section = Tracker::where('userID', Auth::user()->id)
+                ->where('trackerID', $get->trackerID + 1)
+                ->first();
+
+        ReceivedLogs::create([
+            'documentID' => $qrcodeID,
+            'sectionID' => $section->sectionID,
+            'userID' => Auth::user()->id,
+            'username' => Auth::user()->name
+        ]);
        
     }
     /**
@@ -192,6 +213,17 @@ class OfficeRepository implements OfficeInterface {
                     'userID' => Auth::user()->id
                 ]);
             }
+
+            $section = Tracker::where('userID', Auth::user()->id)
+            ->where('trackerID', $get->trackerID + 1)
+            ->first();
+
+            ReceivedLogs::create([
+                'documentID' => $qrcodeID,
+                'sectionID' => $section->sectionID,
+                'userID' => Auth::user()->id,
+                'username' => Auth::user()->name
+            ]);
         }
        
     }

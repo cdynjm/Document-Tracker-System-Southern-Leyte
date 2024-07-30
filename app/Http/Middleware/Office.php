@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class Office
@@ -15,7 +16,7 @@ class Office
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->user()->role != 2) {
+        if(!Gate::allows('accessOffice', auth()->user())) {
             return redirect('/');
         }
         return $next($request);

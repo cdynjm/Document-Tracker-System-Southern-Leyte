@@ -12,6 +12,7 @@ interface OfficeInterface
     public function getSections();
     public function getTracker();
     public function getLogs();
+    public function getReturnedLogs();
     public function getDocuments();
     public function getArchives();
     public function getDocument($request);

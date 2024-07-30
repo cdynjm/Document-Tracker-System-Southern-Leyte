@@ -8,16 +8,10 @@
             </div>
                 <div class="modal-body">  
                     <form action="" id="generate-qrcode" enctype="multipart/form-data">
-                        <label for="">Quantity</label>
-                        <select name="quantity" id="" class="form-select" required>
-                            <option value="">Select...</option>
-                            @php
-                                $range = range(1,10);
-                            @endphp
-                            @foreach ($range as $rn)
-                                <option value="{{ $rn }}">{{ $rn }}</option>
-                            @endforeach
-                        </select>
+                        <label for="">Number of QR Code/s</label>
+                        <input type="number" class="form-control" step="1" min="1" value="1" name="quantity" required>
+                        <label for="">Additional Information</label>
+                        <input type="text" class="form-control" step="1" min="1" name="extension" required>
                         <div class="d-flex justify-content-center mt-4">
                             <button type="submit" class="btn btn-sm bg-dark text-white">Create</button>
                         </div>

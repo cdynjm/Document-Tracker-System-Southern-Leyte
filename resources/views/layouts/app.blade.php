@@ -39,18 +39,18 @@
     <link rel='stylesheet' href="{{asset('storage/css/datatable.css')}}">
 
     @if(Auth::check())
-        @if(Auth::user()->role == 1)
+        @can('accessAdmin', Auth::user())
             <script src="{{asset('storage/js/admin.js')}}" data-navigate-once></script>
-        @endif
-        @if(Auth::user()->role == 2)
+        @endcan
+        @can('accessOffice', Auth::user())
             <script src="{{asset('storage/js/office.js')}}" data-navigate-once></script>
-        @endif
-        @if(Auth::user()->role == 3)
+        @endcan
+        @can('accessUser', Auth::user())
             <script src="{{asset('storage/js/user.js')}}" data-navigate-once></script>
-        @endif
+        @endcan
         <script src="{{asset('storage/js/signout.js')}}" data-navigate-once></script>
     @else
-        <script src="{{asset('storage/js/signin.js')}}" data-navigate-once></script>
+        <script src="{{asset('storage/js/signin.js?1')}}" data-navigate-once></script>
     @endif
 
     <link href="https://cdn.datatables.net/v/bs5/dt-1.13.8/datatables.min.css" rel="stylesheet">

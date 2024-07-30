@@ -27,10 +27,10 @@
           </div>
           <div class="col-lg-4 col-sm-12 m-5">
             <div class="row">
-              <div class="col-lg-3 col-sm-3 col-md-3 col-xs-1 none"></div>
-              <div class="col-lg-3 col-sm-3 col-md-3 col-xs-3"><a target = "_blank" href="https://southernleyte.gov.ph"><img class = "mt-2 img-fluid rounded-circle" src = "{{asset('/storage/images/logo-province-so-leyte.jpg')}}" style = "width: 100px"></a></div>
-              <div class="col-lg-3 col-sm-3 col-md-3 col-xs-3"><a target = "_blank" href="https://southernleytestateu.edu.ph"><img class = "mt-2 img-fluid rounded-circle" src = "{{asset('/storage/images/logo-slsu.png')}}" style = "width: 100px"></a></div>
-              <div class="col-lg-3 col-sm-3 col-md-3 col-xs-3"><a target = "_blank" href="https://www.facebook.com/slsuccsit"><img class = "mt-2 img-fluid rounded-circle" src = "{{asset('/storage/images/logo-ccsit.jpg')}}" style = "width: 100px"></a></div>
+
+              <div class="col-lg-3 col-sm-3 col-md-3 col-xs-3"><a target = "_blank" href="https://southernleyte.gov.ph"><img class = "mt-2 img-fluid rounded-circle" src = "{{asset('/storage/images/logo-province-so-leyte.jpg')}}" style = "width: 80px"></a></div>
+              <div class="col-lg-3 col-sm-3 col-md-3 col-xs-3"><a target = "_blank" href="https://southernleytestateu.edu.ph"><img class = "mt-2 img-fluid rounded-circle" src = "{{asset('/storage/images/logo-slsu.png')}}" style = "width: 80px"></a></div>
+              <div class="col-lg-3 col-sm-3 col-md-3 col-xs-3"><a target = "_blank" href="https://www.facebook.com/slsuccsit"><img class = "mt-2 img-fluid rounded-circle" src = "{{asset('/storage/images/logo-ccsit.jpg')}}" style = "width: 80px"></a></div>
             </div>
           </div>
         </div>

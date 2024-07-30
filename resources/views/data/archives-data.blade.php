@@ -20,7 +20,7 @@
         @php
             $count = 1;
         @endphp
-        @foreach ($documents as $doc)
+        @foreach ($documents->take(200) as $doc)
             <tr>
             <td class="text-center text-sm"
             id="{{ $aes->encrypt($doc->id) }}"

@@ -31,7 +31,7 @@
             >
             @if($doc->trackerID == 0)
                 <input type="checkbox" class="childCheckbox me-2" value="{{ $aes->encrypt($doc->id) }}">
-                <input type="checkbox" class="childCheckboxHidden  me-2" value="{{ $doc->qrcode }}" hidden>
+                <input type="checkbox" class="childCheckboxHidden  me-2" data-name="{{ $doc->qrcode }}" value="{{ $doc->qrcode }}" hidden>
             @endif
             <span class="">{{ $count }}</span>
             </td>

@@ -12,7 +12,7 @@
     <div class="sidenav-header">
         <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
             aria-hidden="true" id="iconSidenav"></i>
-        <a class="align-items-center d-flex mt-3" href="">
+        <a wire:navigate class="align-items-center d-flex mt-3" href="/">
             <img style="width: 50px; height: 50px;" src="https://southernleyte.gov.ph/wp-content/uploads/2023/03/Province-Logo.png" class="ms-4 mb-4 mt-2" alt="...">
             <span class="ms-3 sidebar-text fw-bolder fs-4">
                 DTS
@@ -23,7 +23,7 @@
 
     <hr class="horizontal dark mt-0">
 
-    @if(Auth::user()->role == 1)
+    @can('accessAdmin', Auth::user())
         <div class="collapse navbar-collapse  w-auto h-auto " id="sidenav-collapse-main">
             <ul class="navbar-nav">
                 <li class="nav-item">
@@ -75,9 +75,9 @@
                 </li>
             </ul>
         </div>
-    @endif
+    @endcan
 
-    @if(Auth::user()->role == 2)
+    @can('accessOffice', Auth::user())
     <div class="collapse navbar-collapse  w-auto h-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
@@ -100,9 +100,9 @@
             </li>
         </ul>
     </div>
-    @endif
+    @endcan
 
-    @if(Auth::user()->role == 3)
+    @can('accessUser', Auth::user())
     <div class="collapse navbar-collapse  w-auto h-auto " id="sidenav-collapse-main">
         <ul class="navbar-nav">
             <li class="nav-item">
@@ -121,19 +121,19 @@
            
             @foreach ($offices as $of)
                 <li class="nav-item">
-                    <a wire:navigate class="nav-link {{ Request::url() == route('directory-offices', $aes->encrypt($of->officeID)) ? 'active bg-dark text-white fw-normal' : '' }}"
-                        href="{{ route('directory-offices', ['id' => $aes->encrypt($of->officeID)]) }}?key={{ \Str::random(50) }}">
+                    <a wire:navigate class="nav-link {{ Request::url() == route('directory-offices', $aes->encrypt($of->id)) ? 'active bg-dark text-white fw-normal' : '' }}"
+                        href="{{ route('directory-offices', ['id' => $aes->encrypt($of->id)]) }}?key={{ \Str::random(50) }}">
                         <div
                             class="icon icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                             <i class="fas fa-briefcase text-sm text-success opacity-10"></i>
                         </div>
-                        <span class="nav-link-text ms-1 text-wrap text-xs ">{{ $of->Office->office }}</span>
+                        <span class="nav-link-text ms-1 text-wrap text-xs me-2">{{ $of->name }}</span>
                         @php
-                            $tracker = Tracker::where(['officeID' => $of->officeID])->get();
-                            $documents = Documents::where(['officeID' => $of->officeID])->where(['status' => 1])->get();
+                            $tracker = Tracker::where(['userID' => $of->id])->get();
+                            $documents = Documents::where(['userID' => $of->id])->where(['status' => 1])->get();
                         @endphp
                         @php
-                            $dataID = $aes->encrypt($of->officeID);
+                            $dataID = $aes->encrypt($of->id);
                         @endphp
                         @include('data.count-data')
                     </a>
@@ -141,5 +141,5 @@
             @endforeach
         </ul>
     </div>
-    @endif
+    @endcan
 </aside>

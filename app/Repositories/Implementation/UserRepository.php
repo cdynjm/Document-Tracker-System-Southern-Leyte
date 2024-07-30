@@ -27,6 +27,8 @@ use App\Models\Tracker;
 use App\Models\Documents;
 use App\Models\Sections;
 use App\Models\Logs;
+use App\Models\ReturnedLogs;
+use App\Models\ReceivedLogs;
 
 class UserRepository implements UserInterface {
     protected $aes;
@@ -44,8 +46,8 @@ class UserRepository implements UserInterface {
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function getOffices($request) {
-        $officeID = $this->aes->decrypt($request->id);
-        return Offices::where(['id' => $officeID])->first();
+        $userID = $this->aes->decrypt($request->id);
+        return User::where(['id' => $userID])->first();
     }
     /**
      * Handle an incoming request.
@@ -61,8 +63,8 @@ class UserRepository implements UserInterface {
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function getTracker($request) {
-        $officeID = $this->aes->decrypt($request->id);
-        return Tracker::where(['officeID' => $officeID])->get();
+        $userID = $this->aes->decrypt($request->id);
+        return Tracker::where(['userID' => $userID])->get();
      }
      /**
      * Handle an incoming request.
@@ -70,8 +72,8 @@ class UserRepository implements UserInterface {
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function getDocuments($request) {
-        $officeID = $this->aes->decrypt($request->id);
-        return Documents::where(['officeID' => $officeID])
+        $userID = $this->aes->decrypt($request->id);
+        return Documents::where(['userID' => $userID])
                     ->where(['status' => 1])
                     ->orderBy('created_at', 'DESC')->get();
      }
@@ -80,11 +82,22 @@ class UserRepository implements UserInterface {
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
+    public function getReceivedLogs() {
+        return ReceivedLogs::where(['sectionID' => Auth::user()->Section->id])
+            ->limit(500)
+            ->orderBy('created_at', 'DESC')
+            ->get();
+    }
+     /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
     public function forwardDocument($request) {
         $qrcodeID = $this->aes->decrypt($request->documentID);
-        $officeID = $this->aes->decrypt($request->id);
+        $userID = $this->aes->decrypt($request->id);
         $get = Documents::where(['id' => $qrcodeID])->first();
-        $tracker = Tracker::where(['officeID' => $officeID])
+        $tracker = Tracker::where(['userID' => $userID])
                 ->orderBy('trackerID', 'DESC')
                 ->first();
 
@@ -120,6 +133,18 @@ class UserRepository implements UserInterface {
                 'userID' => $get->userID
             ]);
         }
+
+        $section = Tracker::where('userID', $userID)
+            ->where('trackerID', $get->trackerID + 1)
+            ->first();
+
+        ReceivedLogs::create([
+            'documentID' => $qrcodeID,
+            'officeID' => Auth::user()->Section->id,
+            'sectionID' => $section->sectionID,
+            'userID' => $userID,
+            'username' => Auth::user()->name
+        ]);
         
     }
     /**
@@ -130,9 +155,9 @@ class UserRepository implements UserInterface {
     public function forwardSelectedDocument($request) {
         foreach($request->documentID as $key => $value) {
             $qrcodeID = $this->aes->decrypt($value);
-            $officeID = $this->aes->decrypt($request->id);
+            $userID = $this->aes->decrypt($request->id);
             $get = Documents::where(['id' => $qrcodeID])->first();
-            $tracker = Tracker::where(['officeID' => $officeID])
+            $tracker = Tracker::where(['userID' => $userID])
                     ->orderBy('trackerID', 'DESC')
                     ->first();
     
@@ -168,6 +193,18 @@ class UserRepository implements UserInterface {
                     'userID' => $get->userID
                 ]);
             }
+
+            $section = Tracker::where('userID', $userID)
+                ->where('trackerID', $get->trackerID + 1)
+                ->first();
+
+            ReceivedLogs::create([
+                'documentID' => $qrcodeID,
+                'officeID' => Auth::user()->Section->id,
+                'sectionID' => $section->sectionID,
+                'userID' => $userID,
+                'username' => Auth::user()->name
+            ]);
         }
         
     }
@@ -178,10 +215,10 @@ class UserRepository implements UserInterface {
      */
     public function returnDocument($request) {
         $qrcodeID = $this->aes->decrypt($request->documentID);
-        $officeID = $this->aes->decrypt($request->id);
+        $userID = $this->aes->decrypt($request->id);
         
         $get = Documents::where(['id' => $qrcodeID])->first();
-        $tracker = Tracker::where(['officeID' => $officeID])->orderBy('trackerID', 'DESC')->first();
+        $tracker = Tracker::where(['userID' => $userID])->orderBy('trackerID', 'DESC')->first();
         Documents::where(['id' => $qrcodeID])->update(['trackerID' => $get->trackerID - 1]);
         
         $reason = "
@@ -222,6 +259,36 @@ class UserRepository implements UserInterface {
                 'userID' => $get->userID
             ]);
         }
+        ReturnedLogs::create([
+            'documentID' => $qrcodeID,
+            'trackerID' => $get->trackerID - 1,
+            'officeID' => $get->officeID,
+            'userID' => $get->userID,
+            'remarks' => $reason
+        ]);
+
+        $section = Tracker::where('userID', $userID)
+                ->where('trackerID', $get->trackerID - 1)
+                ->first();
+                
+        if($section != null ) {
+            ReceivedLogs::create([
+                'documentID' => $qrcodeID,
+                'officeID' => Auth::user()->Section->id,
+                'sectionID' => $section->sectionID,
+                'userID' => $userID,
+                'username' => Auth::user()->name
+            ]);
+        }
+        else {
+            ReceivedLogs::create([
+                'documentID' => $qrcodeID,
+                'officeID' => Auth::user()->Section->id,
+                'sectionID' => null,
+                'userID' => $userID,
+                'username' => Auth::user()->name
+            ]);
+        }
     }
      /**
      * Handle an incoming request.
@@ -232,10 +299,10 @@ class UserRepository implements UserInterface {
 
         foreach($request->documentID as $key => $value) {
             $qrcodeID = $this->aes->decrypt($value);
-            $officeID = $this->aes->decrypt($request->id);
+            $userID = $this->aes->decrypt($request->id);
             
             $get = Documents::where(['id' => $qrcodeID])->first();
-            $tracker = Tracker::where(['officeID' => $officeID])->orderBy('trackerID', 'DESC')->first();
+            $tracker = Tracker::where(['userID' => $userID])->orderBy('trackerID', 'DESC')->first();
             Documents::where(['id' => $qrcodeID])->update(['trackerID' => $get->trackerID - 1]);
             
             $reason = "
@@ -274,6 +341,37 @@ class UserRepository implements UserInterface {
                     'trackerID' => $get->trackerID + 1,
                     'officeID' => $get->officeID,
                     'userID' => $get->userID
+                ]);
+            }
+
+            ReturnedLogs::create([
+                'documentID' => $qrcodeID,
+                'trackerID' => $get->trackerID - 1,
+                'officeID' => $get->officeID,
+                'userID' => $get->userID,
+                'remarks' => $reason
+            ]);
+
+            $section = Tracker::where('userID', $userID)
+                ->where('trackerID', $get->trackerID - 1)
+                ->first();
+
+            if($section != null ) {
+                ReceivedLogs::create([
+                    'documentID' => $qrcodeID,
+                    'officeID' => Auth::user()->Section->id,
+                    'sectionID' => $section->sectionID,
+                    'userID' => $userID,
+                    'username' => Auth::user()->name
+                ]);
+            }
+            else {
+                ReceivedLogs::create([
+                    'documentID' => $qrcodeID,
+                    'officeID' => Auth::user()->Section->id,
+                    'sectionID' => null,
+                    'userID' => $userID,
+                    'username' => Auth::user()->name
                 ]);
             }
         }
